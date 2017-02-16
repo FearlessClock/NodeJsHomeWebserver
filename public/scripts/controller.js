@@ -26,7 +26,11 @@ $(document).ready(function () {
 });
 function sendPost()
 {
-	$.post("/accel", {_id:1, x:aX, y:aY, z:aZ}, function(data, status){
-            console.log("Data = " + data + " Status = " + status);
-        });
+	// $.post("/accel", {_id:1, x:aX, y:aY, z:aZ}, function(data, status){
+            // console.log("Data = " + data + " Status = " + status);
+        // });
+    var xhr = new XMLHttpRequest();
+    xhr.open('post', '192.168.1.29/Control');
+    xhr.setRequestHeader('Content-type', 'form-data');
+    xhr.send('bodyPart=' + currentBodyPart + '&angle=' + currentAngle);
 }
