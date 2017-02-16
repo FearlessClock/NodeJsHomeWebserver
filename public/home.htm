@@ -56,29 +56,19 @@
 <!-- Navbar -->
 <nav class="navbar navbar-default">
   <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>                        
-      </button>
-      <a class="navbar-brand" href="#">Me</a>
+    <div class="col-xs-3 ">
+      <img class="img-circle" src="images/profile.jpeg" height=100% width=100% style=" max-height: 64px; max-width: 64px; min-width: 30px; min-height: 30px;">
     </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">WHO</a></li>
-        <li><a href="#">WHAT</a></li>
-        <li><a href="#">WHERE</a></li>
-      </ul>
+    <div class="col-xs-5 text-center">
+      <p style="font-size:35px; color: #555555; font-family: Arial, Helvetica, sans-serif; font-weight: bold" >this->Pieter</p>
     </div>
   </div>
 </nav>
 
 <!-- First Container -->
-<div class="container-fluid bg-1 text-center">
+<div class="container-fluid bg-1 text-center" style="background-color: #89858b">
   <h3 class="margin">Who Am I?</h3>
-  <img src="bird.jpg" class="img-responsive img-circle margin" style="display:inline" alt="Pieter" width="350" height="350">
-  <h3>I'm a programmer</h3>
+  <p>I'm a programmer</p>
 </div>
 
 <!-- Second Container -->
@@ -87,9 +77,14 @@
   <p>I create programs and other interesting things using computers and electronics </p>
 </div>
 
+<div class="container-fluid bg-3 text-center" style="background-color: #cdcace">
+  <h3 class="margin">What Is This?</h3>
+  <p>This is a webserver hosting all the different sites and API endpoints that I use for projects </p>
+</div>
+
 <!-- Footer -->
 <footer class="container-fluid bg-4 text-center">
-  <p><small>Bootstrap Theme Made By <a href="https://www.w3schools.com">www.w3schools.com</a></p> 
+  <p><small>Hosted on a Raspberry Pi and opened to the web with Ngrok</p> 
 </footer>
 
 </body>
