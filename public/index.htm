@@ -1,0 +1,89 @@
+<html>
+<style>
+p{
+  font-size: 30;
+}
+</style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+   <body>
+      
+      <p>Your phone is sending me acceleration data</p>
+      <br>
+      <p id=data>
+      	<br>x=0:
+      	<br>y=0:
+      	<br>z=0:
+      </p>
+      <p style="font-size: 10">Data that was sent to the database</p>
+      <p id=afterData>
+        <br>x=0
+        <br>y=0
+        <br>z=0
+      </p>
+      <script type="text/javascript">
+      	if (window.DeviceMotionEvent == undefined) {
+        //No accelerometer is present. Use buttons. 
+        alert("no accelerometer");
+        }
+        else {
+           console.log("accelerometer found");
+           window.addEventListener("deviceorientation", accelerometerUpdate, true);
+        }
+
+        function accelerometerUpdate(event) {
+   			var aX = event.gamma;
+   			var aY = event.beta;
+   			var aZ = event.alpha;
+   			//The following two lines are just to calculate a
+   			// tilt. Not really needed. 
+   			xPosition = Math.atan2(aY, aZ);
+   			yPosition = Math.atan2(aX, aZ);
+
+        var object = {};
+        object._id = 1;
+        object.x = aX;
+        object.y = aY;
+        object.z = aZ;
+        
+   			var elem = document.getElementById("data");
+   			elem.innerHTML = "x=" + aX + ":<br>y=" + aY + ":<br>z=" + aZ + ":";
+        $.post("/accel", {_id:1, x:aX, y:aY, z:aZ}, function(data, status){
+            console.log("Data = " + data + " Status = " + status);
+        });
+        delay(500);
+   		}
+
+
+       function delay(delayTime)
+       {
+         var start = now();
+         var end = start + delayTime;
+         while(now() < end  )
+         {}
+       }
+      </script>	
+
+      <button type="button" onclick="GetAccel()">Get accel!</button>	
+      <script type="text/javascript">
+        setInterval(SetAccel, 100);
+        function SetAccel()
+        {
+          $.get("/accel", function(data, status){
+                  if(data.x != undefined && data.y != undefined && data.z != undefined)
+                  {
+                    var elem = document.getElementById("afterData");
+   			            elem.innerHTML = "x=" + data.x + ":<br>y=" + data.y + ":<br>z=" + data.z + ":";
+                  }
+    		});
+        }
+      	function GetAccel()
+      	{
+          console.log("Get accel");
+      		$.get("/accel", function(data, status){
+                  if(data.x != undefined && data.y != undefined && data.z != undefined)
+                    console.log("data: x = " + data.x + " y = " + data.y + " z = " + data.z + " status " + status);
+    		});
+      	}
+      </script>	
+   </body>
+</html>

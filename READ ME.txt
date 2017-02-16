@@ -1,0 +1,8 @@
+Run mongodb
+sudo mongod --dbpath /home/pi/share/Node/data
+
+Run Ngrok 
+./ngrok start webserver ssh
+
+Run nodejs
+node server.js 
