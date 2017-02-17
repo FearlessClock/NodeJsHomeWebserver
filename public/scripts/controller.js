@@ -24,17 +24,57 @@ $(document).ready(function () {
             }
         });
 });
-    $( document ).ready(function() {
-        $('#submit').click(function()
-        {
-            $.post("192.168.1.26/Control",
-                
-                {
-                    'bodyPart': currentBodyPart,
-                    'angle': currentAngle
+
+
+var actions = [{angle: 10, bodyPart: 1}];
+actions.push({angle: 90, bodyPart: 1});
+var url = "http://192.168.1.26/Control";
+$( document ).ready(function() {
+    $('#submit').click(function()
+    {   
+        var data = new FormData();
+        data.append("angle", currentAngle);
+        data.append("bodyPart", currentBodyPart);
+         $.ajax({
+                url: url,
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                success: function(result) {
+                    console.log("Success");
                 },
-                function(data, status){
-                    console.log("Data: " + data + "\nStatus: " + status);
-                });
+                error: function(data, result) {
+                    console.log(data);
+                }
             });
+    });
+    var interID = undefined;
+    $('#wave').click(function()
+    {
+        var counter = 0;
+        interID = setInterval(function(){
+            if(counter > 1)
+                clearInterval(interID);
+        var data = new FormData();
+        data.append("angle", actions[counter].angle);
+        data.append("bodyPart", actions[counter].bodyPart);
+        $.ajax({
+            url: url,
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function(result) {
+                console.log("Success");
+            },
+            error: function(data, result) {
+                console.log(data);
+            }
         });
+        counter++;
+        }, 2000);
+    });
+});

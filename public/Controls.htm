@@ -120,10 +120,10 @@
                                             <button id="bodypart" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Choose body part
                                             <span class="caret"></span></button>
                                             <ul class="dropdown-menu">
-                                                <li><button type="button" class="btn btn-success" onclick="chooseBodyPart('rightArm')">Right Arm</button></li>
-                                                <li><button type="button" class="btn btn-success" onclick="chooseBodyPart('leftArm')">Left Arm</button></li>
-                                                <li><button type="button" class="btn btn-success" onclick="chooseBodyPart('rightLeg')">Right Leg</button></li>
-                                                <li><button type="button" class="btn btn-success" onclick="chooseBodyPart('leftLeg')">Left Leg</button></li>
+                                                <li><button type="button" class="btn btn-success" onclick="chooseBodyPart('0')">Right Arm</button></li>
+                                                <li><button type="button" class="btn btn-success" onclick="chooseBodyPart('1')">Left Arm</button></li>
+                                                <li><button type="button" class="btn btn-success" onclick="chooseBodyPart('2')">Right Leg</button></li>
+                                                <li><button type="button" class="btn btn-success" onclick="chooseBodyPart('3')">Left Leg</button></li>
                                             </ul>
                                         </div> 
                                     </div>
@@ -137,7 +137,15 @@
                                 <!--button class="btn btn-primary" type="button" onclick="sendPost()">Send the command</button-->
                             </div>
                     </div>
-                </div>
+                </div class="row" style="background-color: #222">
+                    <div class="col-md-5">
+                    </div>
+                    <div class="col-md-2">
+                        <button id="wave" type="button" class="btn btn-success">Wave</button>
+                    </div>
+                    <div class="col-md-5">
+                    </div>
+                <div>
 
             </div>
             <!-- /.container-fluid -->
@@ -153,7 +161,7 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
-    
+
     <!-- Script for the arduino controller -->
     <script src="scripts/controller.js"></script>
 
