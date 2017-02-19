@@ -15,6 +15,13 @@ MongoClient.connect("mongodb://127.0.0.1:27017/accel", function(error, database)
     console.log("Connection to database established");
     db = database;
 });
+var dbAnimation;
+MongoClient.connect("mongodb://127.0.0.1:27017/animation", function(error, database) {
+    if (error) throw error;
+    console.log("Connection to animation database established");
+    dbAnimation = database;
+});
+
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -58,6 +65,18 @@ app.post('/accel', function (req, res) {
 
     db.collection("Acceleration").save({_id:req.body._id, x:req.body.x, y:req.body.y, z:req.body.z});
 	res.send("These values are saved are " + req.body );
+})
+
+app.post('/animation', function (req, res)
+{
+  console.log("Recieved animation post");
+  console.log(req.body); 
+  dbAnimation.collection(req.body.collection).insert({keyframe:req.body.keyframe, 
+                                                      rightArm:req.body.rightArm,
+                                                      leftArm:req.body.leftArm,
+                                                      rightLeg:req.body.rightLeg,
+                                                      leftLeg:req.body.leftLeg});
+  res.send("Saved keyframe " + req.body.keyframe + " to the database"); //I need to use Jade or something to be able to show interesting stuff here
 })
 
 // This responds a DELETE request for the /del_user page.
