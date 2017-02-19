@@ -79,6 +79,29 @@ app.post('/animation', function (req, res)
   res.send("Saved keyframe " + req.body.keyframe + " to the database"); //I need to use Jade or something to be able to show interesting stuff here
 })
 
+app.post('/GetAnimationData', function(req, res) {
+  console.log("Recieved posting get request for the animation data");
+  console.log(req.body);
+  var kf = parseInt(req.body.keyframe);
+  var actions;
+  dbAnimation.collection(req.body.collection).find({keyframe:kf}).limit(1).toArray(function (error, results) {
+    if(error)
+    {
+      console.log(error);
+      return;
+    }
+    else if(results.length == 0)
+    {
+      console.log("No data");
+      return;
+    }
+    else{
+      console.log("Data sent");
+      res.json(results[0]);
+    }
+  });
+})
+
 // This responds a DELETE request for the /del_user page.
 app.post('/earData', function (req, res) {
   //Collection is in the accel db for the moment 
@@ -101,7 +124,7 @@ app.get('/earData', function(req, res){
         {
    	      res.send(results);
         }
-})
+  })
 })
 
 // This is for Naomi
