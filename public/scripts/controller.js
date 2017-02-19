@@ -26,8 +26,6 @@ $(document).ready(function () {
 });
 
 
-var actions = [{angle: 10, bodyPart: 1}];
-actions.push({angle: 90, bodyPart: 1});
 var url = "http://192.168.1.26/Control";
 $( document ).ready(function() {
     $('#submit').click(function()
@@ -51,15 +49,43 @@ $( document ).ready(function() {
             });
     });
     var interID = undefined;
+    var counter = 0;
     $('#wave').click(function()
     {
-        var counter = 0;
-        interID = setInterval(function(){
-            if(counter > 1)
-                clearInterval(interID);
-        var data = new FormData();
-        data.append("angle", actions[counter].angle);
-        data.append("bodyPart", actions[counter].bodyPart);
+        console.log("Wave pressed");
+        interID = setInterval(function(){waveSendAnimation()}, 2000);
+    });
+
+var animationURL = "localhost:8081/animation";
+function waveSendAnimation()
+{
+    if(counter > 1)
+        clearInterval(interID);
+    var actions = [];
+    console.log("Start of wave ani");
+    $.ajax({
+        url: animationURL,
+        contentType: "application/x-www-form-urlencoded",
+        data: {collection:"wave", keyframe:1},
+        type: 'POST',
+        success: function(result) {
+            console.log("Success");
+            actions.append(result.rightArm);
+            actions.append(result.leftArm);
+            actions.append(result.rightLeg);
+            actions.append(result.leftLeg);     
+        },
+        error: function(data, result) {
+            console.log(data);
+            console.log("The request failed");
+            return;
+        }
+    });
+    console.log("End of first post");
+    var data = new FormData();
+    for(var i = 0; i < 4; i++)
+    {
+
         $.ajax({
             url: url,
             data: data,
@@ -74,7 +100,10 @@ $( document ).ready(function() {
                 console.log(data);
             }
         });
-        counter++;
-        }, 2000);
-    });
+    }
+    counter++;
+}
+
 });
+
+
