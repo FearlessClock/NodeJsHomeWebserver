@@ -5,4 +5,5 @@ Run Ngrok
 ./ngrok start webserver ssh
 
 Run nodejs
-node server.js 
+cd share/NodeJsHomeWebserver/
+screen -d -m npm start 
