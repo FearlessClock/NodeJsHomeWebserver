@@ -57,7 +57,7 @@ $( document ).ready(function() {
         //waveSendAnimation();
     });
 
-var animationURL = "http://localhost:8081/GetAnimationData";
+var animationURL = "http://pieter.eu.ngrok.io/GetAnimationData";
 var testUrl = "http://localhost:8081/abcd";
 function waveSendAnimation()
 {
