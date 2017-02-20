@@ -131,6 +131,7 @@ app.post('/GetAnimationData', function(req, res) {
   animate.findOne({keyframe:kf}, function(err, data){
     if(!err)
     {
+      console.log(data);
       res.json(data);
     }
     else
