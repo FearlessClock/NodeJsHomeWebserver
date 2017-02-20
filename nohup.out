@@ -1,0 +1,7 @@
+
+> webserver@1.0.0 start /home/pi/share/NodeJsHomeWebserver
+> node server.js
+
+Example app listening at http://:::8081
+Connection to database established
+Connection to animation database established
