@@ -71,11 +71,14 @@ function waveSendAnimation()
         data: {collection:"wave", keyframe:1},
         type: 'POST',
         success: function(result) {
-            console.log("Success");
-            actions.push(result.rightArm);
-            actions.push(result.leftArm);
-            actions.push(result.rightLeg);
-            actions.push(result.leftLeg);     
+            console.log(result);
+            if(result != null)
+            {
+	            actions.push(result.rightArm);
+	            actions.push(result.leftArm);
+	            actions.push(result.rightLeg);
+	            actions.push(result.leftLeg);     
+        	}
         },
         error: function(data, result) {
             console.log(data);
