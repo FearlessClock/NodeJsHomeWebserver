@@ -54,12 +54,14 @@ $( document ).ready(function() {
     {
         console.log("Wave pressed");
         interID = setInterval(function(){waveSendAnimation()}, 2000);
+        //waveSendAnimation();
     });
 
-var animationURL = "localhost:8081/animation";
+var animationURL = "http://localhost:8081/GetAnimationData";
+var testUrl = "http://localhost:8081/abcd";
 function waveSendAnimation()
 {
-    if(counter > 1)
+    if(counter > 1);
         clearInterval(interID);
     var actions = [];
     console.log("Start of wave ani");
@@ -70,10 +72,10 @@ function waveSendAnimation()
         type: 'POST',
         success: function(result) {
             console.log("Success");
-            actions.append(result.rightArm);
-            actions.append(result.leftArm);
-            actions.append(result.rightLeg);
-            actions.append(result.leftLeg);     
+            actions.push(result.rightArm);
+            actions.push(result.leftArm);
+            actions.push(result.rightLeg);
+            actions.push(result.leftLeg);     
         },
         error: function(data, result) {
             console.log(data);
@@ -82,13 +84,15 @@ function waveSendAnimation()
         }
     });
     console.log("End of first post");
-    var data = new FormData();
     for(var i = 0; i < 4; i++)
-    {
-
+    {    
+    	var formData = new FormData();
+    	formData.append("angle", actions[i]);
+    	formData.append("bodyPart", i);
+    	console.log(formData);
         $.ajax({
             url: url,
-            data: data,
+            data: formData,
             cache: false,
             contentType: false,
             processData: false,
