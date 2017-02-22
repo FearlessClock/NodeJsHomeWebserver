@@ -15,18 +15,6 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 var accConn = db.createConnection('mongodb://127.0.0.1:27017/accel');
 var aniConn = db.createConnection('mongodb://127.0.0.1:27017/animation');
 
-//Check if both connections to the databases was successful
-// var DB = accConn.Connection;
-// DB.on('error', console.error.bind(console, 'connection error:'));
-// DB.once('open', function(){
-//   console.log("Connection to database established");
-// });
-// DB = aniConn.Connection;
-// DB.on('error', console.error.bind(console, 'connection error:'));
-// DB.once('open', function(){
-//   console.log("Connection to database established");
-// });
-
 //Create the schemas that will hold the data in Mongodb
 //These schemas are used for data validation and other db stuff
 var accelScheme = db.Schema({id: Number, x: Number, y: Number, z: Number});
@@ -37,21 +25,6 @@ var animateScheme = db.Schema({keyframe: Number, rightArm: Number, leftArm: Numb
 var accel = accConn.model('accel', accelScheme);
 var ear = accConn.model('ear', earScheme);
 var animate = aniConn.model('animate', animateScheme);
-
-/*
-var db;
-MongoClient.connect("mongodb://127.0.0.1:27017/accel", function(error, database) {
-    if (error) throw error;
-    console.log("Connection to database established");
-    db = database;
-});
-var dbAnimation;
-MongoClient.connect("mongodb://127.0.0.1:27017/animation", function(error, database) {
-    if (error) throw error;
-    console.log("Connection to animation database established");
-    dbAnimation = database;
-});
-*/
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -76,28 +49,11 @@ app.get('/accel', function (req, res) {
     if(err) console.log("There was an error getting the data");
     res.json(data);
   });
-   //  db.collection("Acceleration").find().toArray(function (error, results) {
-   //      if (error) 
-   //      {
-   //        throw error;
-   //      }
-   //      else if(results.length == 0)
-   //      {
-		 //  console.log("There is nothing in the database");
-   //        res.send("There is nothing");
-   //      }
-   //      else
-   //      {
-   // 	      res.send(results[results.length -1]);
-   //      }
-   // });
 })
 
 // This takes the accel data and stores it in the database
 app.post('/accel', function (req, res) {
     req.body.id = 1;
-    //db.collection("Acceleration").save({id:req.body.id, x:req.body.x, y:req.body.y, z:req.body.z});
-
     var acceleraionData = new accel({id:req.body.id, x:req.body.x, y:req.body.y, z:req.body.z});
     acceleraionData.save(function (err, accelData){
       if(err) console.log("There was a problem saving the data");
@@ -117,11 +73,7 @@ app.post('/animation', function (req, res)
   animationData.save(function(err, data){
     if(err) console.log("There was an error saving the data");
   })
-  // dbAnimation.collection(req.body.collection).insert({keyframe:req.body.keyframe, 
-  //                                                     rightArm:req.body.rightArm,
-  //                                                     leftArm:req.body.leftArm,
-  //                                                     rightLeg:req.body.rightLeg,
-  //                                                     leftLeg:req.body.leftLeg});
+
   res.send("Saved keyframe " + req.body.keyframe + " to the database"); //I need to use Jade or something to be able to show interesting stuff here
 })
 
@@ -139,59 +91,10 @@ app.post('/GetAnimationData', function(req, res) {
       console.log(err);
     }
   });
-  // dbAnimation.collection(req.body.collection).find({keyframe:kf}).limit(1).toArray(function (error, results) {
-  //   if(error)
-  //   {
-  //     console.log(error);
-  //     return;
-  //   }
-  //   else if(results.length == 0)
-  //   {
-  //     console.log("No data");
-  //     return;
-  //   }
-  //   else{
-  //     console.log("Data sent");
-  //     res.json(results[0]);
-  //   }
-  // });
-})
-
-// Post request to store data from the ear
-app.post('/earData', function (req, res) {
-  //Collection is in the accel db for the moment 
-   var earData = new ear({"timestamp":req.body.timestamp,"value":req.body.value});
-   earData.save(function(err, earData){
-    if(err) 
-    {
-      console.log("There was was an error");
-      res.send("There was an error");
-    }
-    else
-    {
-      res.send("The data was saved");
-    }
-   });
-   // db.collection("Ear").save({"timestamp":req.body.timestamp,"value":req.body.value});
 })
 
 //Get request to get the ear data
 app.get('/earData', function(req, res){
-  // db.collection("Ear").find().toArray(function (error, results) {
-  //       if (error) 
-  //       {
-  //         throw error;
-  //       }
-  //       else if(results.length == 0)
-  //       {
-		//       console.log("There is nothing in the database");
-  //         res.send("There is nothing");
-  //       }
-  //       else
-  //       {
-  //  	      res.send(results);
-  //       }
-  // })
   ear.find({}, function(err, data){
     if(!err)
       res.send(data);
@@ -199,6 +102,52 @@ app.get('/earData', function(req, res){
       console.log("There was an error");
   });
 })
+
+app.get('/earData/:timestamp', function(req, res){
+  ear.find({timestamp:req.params.timestamp}, function(err, data){
+    if(!err)
+    {
+      res.send(data);
+    }
+    else
+    {
+      console.log("There was an error");
+    }
+  })
+})
+
+// Post request to store data from the ear
+app.post('/earData', function (req, res) {
+  //Collection is in the accel db for the moment 
+   var earData = new ear({"timestamp":req.body.timestamp,"value":req.body.value});
+   ear.find({timestamp:req.params.timestamp}, function(err, data){
+    if(!err)
+    {
+      if(data.length == 0)
+      {
+        earData.save(function(err, earData){
+          if(err) 
+          {
+            console.log("There was was an error");
+            res.send("There was an error");
+          }
+          else
+          {
+            res.send("The data was saved");
+          }
+        });
+      }
+      else
+      {
+        ear.findOneAndUpdate({timestamp:req.params.timestamp}, {'value':req.body.value}, {upsert:true}, function(err, doc){
+            if (err) return res.send(500, { error: err });
+            return res.send("succesfully saved");
+        });
+      }
+    }
+   })
+})
+
 
 // This is for Naomi
 app.get('/Page1', function (req, res) {
