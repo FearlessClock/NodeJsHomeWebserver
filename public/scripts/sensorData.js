@@ -1,5 +1,5 @@
 
-var url = "http://localhost:8081/earData";
+var url = "http://pieter.eu.ngrok.io/earData";
 var paperElement = document.getElementById("graph");
 var width = 400;
 var height = 350;

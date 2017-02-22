@@ -49,35 +49,62 @@ $( document ).ready(function() {
             });
     });
     var interID = undefined;
-    var counter = 0;
     $('#wave').click(function()
     {
-        console.log("Wave pressed");
-        interID = setInterval(function(){waveSendAnimation()}, 2000);
-        //waveSendAnimation();
+        waveSendAnimation();
     });
 
+var counter = 0;
 var animationURL = "http://pieter.eu.ngrok.io/GetAnimationData";
-var testUrl = "http://localhost:8081/abcd";
 function waveSendAnimation()
 {
-    if(counter > 1);
-        clearInterval(interID);
     var actions = [];
     console.log("Start of wave ani");
     $.ajax({
         url: animationURL,
         contentType: "application/x-www-form-urlencoded",
-        data: {collection:"wave", keyframe:1},
+        data: {collection:"wave", keyframe:counter},
         type: 'POST',
         success: function(result) {
+        	console.log("results");
             console.log(result);
             if(result != null)
             {
 	            actions.push(result.rightArm);
 	            actions.push(result.leftArm);
 	            actions.push(result.rightLeg);
-	            actions.push(result.leftLeg);     
+	            actions.push(result.leftLeg);   
+
+	            console.log("End of first post");
+			    for(var i = 0; i < 4; i++)
+			    {    
+			    	var formData = new FormData();
+			    	formData.append("angle", actions[i]);
+			    	formData.append("bodyPart", i);
+			        $.ajax({
+			            url: url,
+			            data: formData,
+			            cache: false,
+			            contentType: false,
+			            processData: false,
+			            type: 'POST',
+			            success: function(result) {
+			                console.log("Success 2nd post");
+			            },
+			            error: function(data, result) {
+			            	console.log("Second post failed");
+			                console.log(data);
+			            }
+			        });
+			    }
+			    setTimeout(waveSendAnimation(), 2000);
+			    counter++;  
+        	}
+        	else
+        	{
+        		console.log("Nothing left to send");
+        		counter = 0;
+        		return;
         	}
         },
         error: function(data, result) {
@@ -86,29 +113,7 @@ function waveSendAnimation()
             return;
         }
     });
-    console.log("End of first post");
-    for(var i = 0; i < 4; i++)
-    {    
-    	var formData = new FormData();
-    	formData.append("angle", actions[i]);
-    	formData.append("bodyPart", i);
-    	console.log(formData);
-        $.ajax({
-            url: url,
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            success: function(result) {
-                console.log("Success");
-            },
-            error: function(data, result) {
-                console.log(data);
-            }
-        });
-    }
-    counter++;
+    
 }
 
 });
