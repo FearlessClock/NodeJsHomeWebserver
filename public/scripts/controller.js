@@ -52,53 +52,29 @@ $( document ).ready(function() {
     $('#wave').click(function()
     {
         waveSendAnimation();
-    });
+    });    
+
+});
 
 var counter = 0;
 var animationURL = "http://pieter.eu.ngrok.io/GetAnimationData";
 function waveSendAnimation()
 {
-    var actions = [];
-    console.log("Start of wave ani");
     $.ajax({
         url: animationURL,
         contentType: "application/x-www-form-urlencoded",
-        data: {collection:"wave", keyframe:counter},
+        data: {keyframe:counter},
         type: 'POST',
         success: function(result) {
-        	console.log("results");
-            console.log(result);
             if(result != null)
             {
+    			var actions = [];
 	            actions.push(result.rightArm);
 	            actions.push(result.leftArm);
 	            actions.push(result.rightLeg);
 	            actions.push(result.leftLeg);   
 
-	            console.log("End of first post");
-			    for(var i = 0; i < 4; i++)
-			    {    
-			    	var formData = new FormData();
-			    	formData.append("angle", actions[i]);
-			    	formData.append("bodyPart", i);
-			        $.ajax({
-			            url: url,
-			            data: formData,
-			            cache: false,
-			            contentType: false,
-			            processData: false,
-			            type: 'POST',
-			            success: function(result) {
-			                console.log("Success 2nd post");
-			            },
-			            error: function(data, result) {
-			            	console.log("Second post failed");
-			                console.log(data);
-			            }
-			        });
-			    }
-			    setTimeout(waveSendAnimation(), 2000);
-			    counter++;  
+			    sendDataToArduino(actions);
         	}
         	else
         	{
@@ -113,9 +89,31 @@ function waveSendAnimation()
             return;
         }
     });
-    
 }
 
-});
-
-
+function sendDataToArduino(act)
+{
+	for(var i = 0; i < 4; i++)
+    {    
+    	var formData = new FormData();
+    	formData.append("angle", act[i]);
+    	formData.append("bodyPart", i);
+        $.ajax({
+            url: url,
+            data: formData,
+            cache: false,
+            async: false,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function(result) {
+                console.log("Success 2nd post");
+            },
+            error: function(data, result) {
+            	console.log("Second post failed");
+            }
+        });
+    }
+    setTimeout(function(){waveSendAnimation();}, 2000);
+    counter++;  
+}
