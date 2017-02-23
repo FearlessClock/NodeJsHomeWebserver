@@ -10,8 +10,8 @@ $(document).ready(function () {
         url: url,
         type: 'GET',
         success: function(result) {
-            console.log(result[2]);
-            createGraph(result);
+            if(result.length > 0)
+                createGraph(result);
         },
         error: function(data, result) {
             console.log(data);

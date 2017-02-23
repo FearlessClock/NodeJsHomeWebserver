@@ -53,8 +53,11 @@ $( document ).ready(function() {
     {
         waveSendAnimation();
     });
+<<<<<<< Updated upstream
 
 var counter = 0;
+=======
+>>>>>>> Stashed changes
 var animationURL = "http://pieter.eu.ngrok.io/GetAnimationData";
 function waveSendAnimation()
 {

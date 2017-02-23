@@ -119,8 +119,9 @@ app.get('/earData/:timestamp', function(req, res){
 // Post request to store data from the ear
 app.post('/earData', function (req, res) {
   //Collection is in the accel db for the moment 
-   var earData = new ear({"timestamp":req.body.timestamp,"value":req.body.value});
-   ear.find({timestamp:req.params.timestamp}, function(err, data){
+  var date = new Date().toLocaleString();
+   var earData = new ear({"timestamp":date,"value":req.body.value});
+   ear.find({timestamp:date}, function(err, data){
     if(!err)
     {
       if(data.length == 0)
@@ -139,7 +140,7 @@ app.post('/earData', function (req, res) {
       }
       else
       {
-        ear.findOneAndUpdate({timestamp:req.params.timestamp}, {'value':req.body.value}, {upsert:true}, function(err, doc){
+        ear.findOneAndUpdate({timestamp:date}, {'value':req.body.value}, {upsert:true}, function(err, doc){
             if (err) return res.send(500, { error: err });
             return res.send("succesfully saved");
         });
