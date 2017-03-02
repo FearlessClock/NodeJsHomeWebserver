@@ -119,11 +119,13 @@ app.get('/earData/:timestamp', function(req, res){
 // Post request to store data from the ear
 app.post('/earData', function (req, res) {
   //Collection is in the accel db for the moment 
-  var date = new Date().toLocaleString();
+  var date = req.body.timestamp;
    var earData = new ear({"timestamp":date,"value":req.body.value});
-   ear.find({timestamp:date}, function(err, data){
+    console.log("earData: " + date);
+    ear.find({timestamp:date}, function(err, data){
     if(!err)
     {
+	console.log(data);
       if(data.length == 0)
       {
         earData.save(function(err, earData){
