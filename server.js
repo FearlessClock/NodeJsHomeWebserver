@@ -153,6 +153,24 @@ app.post('/earData', function (req, res) {
    })
 })
 
+app.post('/GetAnimation', function(req, res){
+	console.log("Get Latest animation");
+	console.log(req.body);
+	var animation = req.body.animation;
+	var frame = req.body.frame;
+	animate.findOne({keyframe:frame}, function(err, data){
+	    if(!err)
+	    {
+	      console.log(data);
+	      res.json(data);
+	    }
+	    else
+	    {
+	      console.log(err);
+	      res.send("error");
+	    }
+	  });
+})
 
 // This is for Naomi
 app.get('/Page1', function (req, res) {
@@ -172,5 +190,5 @@ var server = app.listen(8081, function () {
    var host = server.address().address
    var port = server.address().port
 
-   console.log("Example app listening at http://%s:%s", host, port)
+   console.log("Example app listening at http://"+host+":" +port)
 })
