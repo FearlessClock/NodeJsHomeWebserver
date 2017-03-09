@@ -7,3 +7,6 @@ Run Ngrok
 Run nodejs
 cd share/NodeJsHomeWebserver/
 screen -d -m npm start 
+
+
+mongod --dbpath /home/pi/share/Node/data --repair
