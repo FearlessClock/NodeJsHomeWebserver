@@ -29,8 +29,9 @@ function createGraph(data)
     }
     for(var i = start; i < amountOfPoints; i++)
     {
-        // Creates circle at x = 50, y = 40, with radius 10
-        var circle = paper.circle(data[i].timestamp*(width/data.length), height - data[i].value*(width/200), 3);
+        console.log(height-data[i].value*(width/200));
+	// Creates circle at x = 50, y = 40, with radius 10
+        var circle = paper.circle(data[i].timestamp*(width/data.length), height - data[i].value/3, 3);
         var txt = paper.print(data[i].timestamp*10, height - data[i].value, "print", paper.getFont("Museo"), 40);
         // Sets the fill attribute of the circle to red (#f00)
         circle.attr("fill", "#f00");
