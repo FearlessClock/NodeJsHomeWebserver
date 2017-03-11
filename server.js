@@ -61,38 +61,6 @@ app.post('/accel', function (req, res) {
     res.send("These values are saved are " + req.body.id + " : " + req.body.x );
 })
 
-app.post('/animation', function (req, res)
-{
-  console.log("Recieved animation post");
-  console.log(req.body); 
-  var animationData = new animate({keyframe:req.body.keyframe, 
-                                   rightArm:req.body.rightArm,
-                                   leftArm:req.body.leftArm,
-                                   rightLeg:req.body.rightLeg,
-                                   leftLeg:req.body.leftLeg});
-  animationData.save(function(err, data){
-    if(err) console.log("There was an error saving the data");
-  })
-
-  res.send("Saved keyframe " + req.body.keyframe + " to the database"); //I need to use Jade or something to be able to show interesting stuff here
-})
-
-app.post('/GetAnimationData', function(req, res) {
-  var kf = parseInt(req.body.keyframe);
-  var actions;
-  animate.findOne({keyframe:kf}, function(err, data){
-    if(!err)
-    {
-      console.log(data);
-      res.json(data);
-    }
-    else
-    {
-      console.log(err);
-    }
-  });
-})
-
 //Get request to get the ear data
 app.get('/earData', function(req, res){
   ear.find({}, function(err, data){
@@ -152,6 +120,40 @@ app.post('/earData', function (req, res) {
    })
 })
 
+app.post('/animation', function (req, res)
+{
+  console.log("Recieved animation post");
+  console.log(req.body); 
+  var animationData = new animate({keyframe:req.body.keyframe, 
+                                   rightArm:req.body.rightArm,
+                                   leftArm:req.body.leftArm,
+                                   rightLeg:req.body.rightLeg,
+                                   leftLeg:req.body.leftLeg});
+  animationData.save(function(err, data){
+    if(err) console.log("There was an error saving the data");
+  })
+
+  res.send("Saved keyframe " + req.body.keyframe + " to the database"); //I need to use Jade or something to be able to show interesting stuff here
+})
+
+app.post('/GetAnimationData', function(req, res) {
+  var kf = parseInt(req.body.keyframe);
+  var actions;
+  animate.findOne({keyframe:kf}, function(err, data){
+    if(!err)
+    {
+      console.log(data);
+      res.json(data);
+    }
+    else
+    {
+      console.log(err);
+    }
+  });
+})
+
+
+
 app.post('/GetAnimation', function(req, res){
 	console.log("Get Latest animation");
 	console.log(req.body);
@@ -170,6 +172,46 @@ app.post('/GetAnimation', function(req, res){
 	    }
 	  });
 })
+var collectionName = "wave";
+var key = 0;
+var isThereAnAnim = false;
+
+app.get('/action', function(req, res){
+	var data = {};
+    data = GoThroughAnimation();
+	res.json(data);
+})
+
+app.post('/setAction', function(req, res){
+	collectionName = req.body.collName;
+	key = req.body.key;
+	isThereAnAnim = true;
+})
+
+function GoThroughAnimation()
+{
+	if(isThereAnAnim == false)
+	{
+		return {};
+	}
+	var count = 0;
+	animate.find({}, function(err, data){
+		count = data.length;
+	});
+	animate.findOne({keyframe:key}, function(err, data){
+	    if(!err)
+	    {
+	      console.log(data);
+	      return data;
+	    }
+	});
+	key++;
+	if(key >= count-1)
+	{
+		key = 0;
+		isThereAnAnim = false;
+	}
+}
 
 // This is for Naomi
 app.get('/Page1', function (req, res) {
