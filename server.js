@@ -43,6 +43,8 @@ app.get('/controller', function(req, res) {
    res.sendFile(__dirname + "/public/DashboardControl.htm");
 })
 
+//Acceleration data requests
+//--------------------------------------------------------------------------
 // This responds with the lastest accel data
 app.get('/accel', function (req, res) {
   accel.find({id:1}, function(err, data){
@@ -60,7 +62,11 @@ app.post('/accel', function (req, res) {
     });
     res.send("These values are saved are " + req.body.id + " : " + req.body.x );
 })
+//--------------------------------------------------------------------------
 
+
+//Ear du fablab
+//--------------------------------------------------------------------------
 //Get request to get the ear data
 app.get('/earData', function(req, res){
   ear.find({}, function(err, data){
@@ -119,7 +125,11 @@ app.post('/earData', function (req, res) {
     }
    })
 })
+//--------------------------------------------------------------------------
 
+
+//Animated teddy rabbit
+//--------------------------------------------------------------------------
 app.post('/animation', function (req, res)
 {
   console.log("Recieved animation post");
@@ -154,7 +164,7 @@ app.post('/GetAnimationData', function(req, res) {
 
 
 
-app.post('/GetAnimation', function(req, res){
+app.post('/getAnimation', function(req, res){
 	console.log("Get Latest animation");
 	console.log(req.body);
 	var animation = req.body.animation;
@@ -175,18 +185,62 @@ app.post('/GetAnimation', function(req, res){
 var collectionName = "wave";
 var key = 0;
 var isThereAnAnim = false;
+var response = {};
 
 app.get('/action', function(req, res){
 	var data = {};
+  if(isThereAnAnim)
+  {
     data = GoThroughAnimation();
-	res.json(data);
+    console.log(data);
+	  res.json(data);
+  }
+  else
+  {
+    res.json(response);
+  }
 })
 
 app.post('/setAction', function(req, res){
 	collectionName = req.body.collName;
 	key = req.body.key;
+  console.log(key + " " + collectionName);
 	isThereAnAnim = true;
 })
+
+//SingleActionSet
+app.post('/setSingleAction', function(req, res){
+  var angle = req.body.angle;
+  var body = req.body.body;
+  if(body == 0)
+  {
+    response = {keyframe:0, rightArm:angle, leftArm:-1, rightLeg:-1, leftLeg:-1};
+  }
+  else if(body == 1)
+  {
+    response = {keyframe:0, rightArm:-1, leftArm:angle, rightLeg:-1, leftLeg:-1};
+  }
+  else if(body == 2)
+  {
+    response = {keyframe:0, rightArm:-1, leftArm:-1, rightLeg:angle, leftLeg:-1};
+  }
+  else if(body == 3)
+  {
+    response = {keyframe:0, rightArm:-1, leftArm:-1, rightLeg:-1, leftLeg:angle};
+  }
+  console.log(response);
+  res.send("succes");
+})
+
+//GetTheCurrentAction
+function GetCurrentMovement()
+{
+  if(isThereAnAnim == false)
+  {
+    return {};
+  }
+
+}
 
 function GoThroughAnimation()
 {
@@ -198,6 +252,11 @@ function GoThroughAnimation()
 	animate.find({}, function(err, data){
 		count = data.length;
 	});
+  console.log(count);
+  if(count == 0)
+  {
+    return {};
+  }
 	animate.findOne({keyframe:key}, function(err, data){
 	    if(!err)
 	    {
@@ -212,6 +271,7 @@ function GoThroughAnimation()
 		isThereAnAnim = false;
 	}
 }
+//--------------------------------------------------------------------------
 
 // This is for Naomi
 app.get('/Page1', function (req, res) {
