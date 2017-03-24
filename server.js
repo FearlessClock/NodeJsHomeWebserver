@@ -193,12 +193,9 @@ app.get('/action', function(req, res){
   {
     data = GoThroughAnimation();
     console.log(data);
-	  res.json(data);
+    reponse = data;
   }
-  else
-  {
-    res.json(response);
-  }
+    res.json(reponse);
 })
 
 app.post('/setAction', function(req, res){
@@ -250,26 +247,27 @@ function GoThroughAnimation()
 	}
 	var count = 0;
 	animate.find({}, function(err, data){
-		count = data.length;
-	});
-  console.log(count);
-  if(count == 0)
-  {
-    return {};
-  }
-	animate.findOne({keyframe:key}, function(err, data){
-	    if(!err)
-	    {
-	      console.log(data);
-	      return data;
-	    }
-	});
-	key++;
-	if(key >= count-1)
-	{
-		key = 0;
-		isThereAnAnim = false;
-	}
+            console.log("Found something");
+	        count = data.length;
+            console.log(count);
+            if(count == 0)
+            {
+			    return {};
+            }
+            animate.findOne({keyframe:key}, function(err, data){
+                if(!err)
+                {
+                    console.log(data);
+                    return data;
+                }
+            });
+            key++;
+            if(key >= count-1)
+            {
+                key = 0;
+                isThereAnAnim = false;
+            }
+    });
 }
 //--------------------------------------------------------------------------
 
